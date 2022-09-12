@@ -1,7 +1,4 @@
-all: run
-
-run:
-	nim r tt.nim
+all: release
 
 build:
 	nim c tt.nim
