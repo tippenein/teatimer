@@ -15,30 +15,39 @@ proc main(): auto =
     -h,--help                Show this help text
     TIME                     in the format #m#
     """
-    if paramCount() > 0 and (paramStr(1) != "-h" or paramStr(1) != "--help"):
-        let time = paramStr(1)
-        echo time
-        let timings = time.split("m")
-        var sec = 0
-        var count = 0
-        for t in timings:
-            if count == 0:
-                sec = sec + (parseInt(t) * 60)
+    try:
+        if paramCount() > 0 and (paramStr(1) != "-h" or paramStr(1) != "--help"):
+            let time = paramStr(1)
+            echo time
+            let timings = time.split("m")
+            var sec = 0
+            var count = 0
+            for t in timings:
+                if count == 0:
+                    sec = sec + (parseInt(t) * 60)
+                else:
+                    sec = sec + parseInt(t)
+                    count = count + 1
+
+            while sec >= 10:
+
+                echo sec
+
+                if execCmd("sleep 10") == 0:
+                    echo ".."
+                    sec = sec - 10
+                else:
+                    echo "failed"
+            if execCmd("echo 'tea is done' | espeak") == 0:
+                echo "done"
+            elif execCmd("say tea is done") == 0:
+                echo "done"
             else:
-                sec = sec + parseInt(t)
-                count = count + 1
+                echo "say|espeak not available on this os"
 
-        while sec >= 10:
-
-            echo sec
-
-            if execCmd("sleep 10") == 0:
-                echo ".."
-                sec = sec - 10
-            else:
-                echo "failed"
-
-    else:
-        echo help
+        else:
+            echo help
+    except OSError:
+      discard
 
 main()
